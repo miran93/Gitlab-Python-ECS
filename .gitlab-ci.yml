@@ -12,7 +12,7 @@ test:
   script:
     - python -m unittest discover tests
 
-deploy_staging:
+deploy_dev_env:
    stage: deploy
    before_script:
      - pip install awsebcli --upgrade --user
@@ -20,9 +20,9 @@ deploy_staging:
      - ./.eb-config.sh
      - git checkout master
    script:
-      - /root/.local/bin/eb deploy flask-starter-env --profile user
+      - /root/.local/bin/eb deploy flask-starter-dev --profile user
    environment:
-      name: staging
+      name: dev
       url: https://your.url.com
    when: manual
    only:
