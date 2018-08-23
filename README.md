@@ -44,3 +44,7 @@ eb create flask-env
 This command will create an Elastic Beanstalk environment associated to your IAM user account. After few minutes, you can see the created environment online on the AWS console (Services > Elastic Beanstalk).
 
 By accessing the URL of the running envionment, the Hello world starter application should be displayed !
+
+That's it ! 
+
+If you want to delete your environment (and avoid having useless AWS costs) you can use the command `eb terminate`.
