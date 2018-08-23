@@ -38,7 +38,7 @@ Go to Gitlab > Settings > CI / CD > Variables and create two variables :
 #### 4 - Create the Elastic Beanstalk environment on AWS
 
 ```
-eb create flask-env
+eb create flask-starter-dev
 ```
 
 This command will create an Elastic Beanstalk environment associated to your IAM user account. After few minutes, you can see the created environment online on the AWS console (Services > Elastic Beanstalk).
