@@ -1,0 +1,29 @@
+image: python:3.6-stretch
+
+stages:
+  - test
+  - deploy
+
+before_script:
+    - pip install -r requirements.txt
+
+test:
+  stage: test
+  script:
+    - python -m unittest discover tests
+
+deploy_staging:
+   stage: deploy
+   before_script:
+     - pip install awsebcli --upgrade --user
+     - chmod +x ./.eb-config.sh
+     - ./.eb-config.sh
+     - git checkout master
+   script:
+      - /root/.local/bin/eb deploy flask-starter-env --profile user
+   environment:
+      name: staging
+      url: https://your.url.com
+   when: manual
+   only:
+    - master
