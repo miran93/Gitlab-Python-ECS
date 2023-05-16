@@ -18,10 +18,10 @@ deploy_dev_env:
      - ./.eb-config.sh
      - git checkout master
    script:
-      - /root/.local/bin/eb deploy flask-starter-dev --profile user
+      - /root/.local/bin/eb deploy Pythonapp-env --profile user
    environment:
       name: dev
-      url: https://your.url.com
+      url: http://pythonapp-env.eba-sachxjgm.us-east-1.elasticbeanstalk.com/
    when: manual
    only:
     - master
