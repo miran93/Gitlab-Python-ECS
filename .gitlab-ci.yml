@@ -16,7 +16,6 @@ deploy_dev_env:
      - pip install awsebcli --upgrade --user
      - chmod +x ./.eb-config.sh
      - ./.eb-config.sh
-     - git checkout master
    script:
       - /root/.local/bin/eb deploy Pythonapp-env --profile user
    environment:
