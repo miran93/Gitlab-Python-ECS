@@ -8,9 +8,9 @@ build:
   services:
     - docker:dind
   script:
-    - docker build -t your-image-name .
+    - docker build -t miranmuthanna93/python-image .
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push your-image-name
+    - docker push miranmuthanna93/python-image
 
 deploy:
   stage: deploy
