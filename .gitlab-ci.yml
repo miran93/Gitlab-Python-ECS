@@ -18,4 +18,4 @@ deploy:
   script:
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-    - aws ecs update-service --cluster your-ecs-cluster-name --service your-ecs-service-name --force-new-deployment
+    - aws ecs update-service --cluster Python-ECS --service python-service --force-new-deployment
