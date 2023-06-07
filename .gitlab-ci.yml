@@ -1,27 +1,21 @@
 stages:
-  - test
+  - build
   - deploy
 
-before_script:
-    - pip install -r requirements.txt
-
-test:
-  stage: test
+build:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
   script:
-    - python -m unittest discover tests
+    - docker build -t your-image-name .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push your-image-name
 
-deploy_dev_env:
-   stage: deploy
-   before_script:
-     - pip install awsebcli --upgrade --user
-     - chmod +x ./.eb-config.sh
-     - ./.eb-config.sh
-     - git checkout master
-   script:
-      - /root/.local/bin/eb deploy Pythonapp-env --profile user
-   environment:
-      name: dev
-      url: http://pythonapp-env.eba-sachxjgm.us-east-1.elasticbeanstalk.com/
-   when: manual
-   only:
-    - master
+deploy:
+  stage: deploy
+  image: amazon/aws-cli:latest
+  script:
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws ecs update-service --cluster your-ecs-cluster-name --service your-ecs-service-name --force-new-deployment
