@@ -20,9 +20,12 @@ deploy:
     - apt-get update && apt-get install -y curl jq
     - curl -L "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
     - unzip awscliv2.zip
-    - ./aws/install
-    - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+    - pip install awscli
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region $AWS_REGION
     - docker build -t miranmuthanna93/python-image .
     - docker push miranmuthanna93/python-image
+    - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --force-new-deployment
     - ecs_deploy
 
