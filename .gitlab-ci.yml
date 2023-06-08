@@ -4,13 +4,16 @@ stages:
 
 variables:
   DOCKER_IMAGE_NAME: miranmuthanna93/python-image
-  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_HOST: tcp://localhost:2375/
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
 
 build:
   stage: build
   image: docker
   services:
     - docker:dind
+  alias: thedockerhost
   script:
     - docker --version
     - docker pull alpine
