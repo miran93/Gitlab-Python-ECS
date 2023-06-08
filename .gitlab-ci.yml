@@ -13,7 +13,6 @@ build:
   image: docker
   services:
     - docker:dind
-  alias: thedockerhost
   script:
     - docker --version
     - docker pull alpine
