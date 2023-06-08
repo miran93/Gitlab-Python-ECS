@@ -1,31 +1,24 @@
-image: python:3.9
-
 stages:
   - build
   - deploy
 
+variables:
+  DOCKER_IMAGE_NAME: miranmuthanna93/python-image
+
 build:
   stage: build
+  image: python:3.9
   script:
-    - pip install -r requirements.txt
-    - python setup.py build
-    # Additional build commands if necessary
+    - docker build -t $DOCKER_IMAGE_NAME .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $DOCKER_IMAGE_NAME
 
 deploy:
   stage: deploy
-  image:
-    name: python:3.9
-    entrypoint: [""]
+  image: python:latest
   script:
-    - apt-get update && apt-get install -y curl jq
-    - curl -L "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-    - unzip awscliv2.zip
     - pip install awscli
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws configure set default.region $AWS_REGION
-    - docker build -t miranmuthanna93/python-image .
-    - docker push miranmuthanna93/python-image
     - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --force-new-deployment
-    - ecs_deploy
-
