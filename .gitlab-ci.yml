@@ -4,13 +4,16 @@ stages:
 
 variables:
   DOCKER_IMAGE_NAME: miranmuthanna93/python-image
+  DOCKER_HOST: tcp://docker:2375/
 
 build:
   stage: build
-  image: docker:latest
+  image: docker
   services:
     - docker:dind
   script:
+    - docker --version
+    - docker pull alpine
     - docker build -t $DOCKER_IMAGE_NAME .
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $DOCKER_IMAGE_NAME
