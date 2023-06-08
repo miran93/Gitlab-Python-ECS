@@ -4,7 +4,7 @@ stages:
 
 build:
   stage: build
-  image: docker:latest
+  image: miranmuthanna93/python-image
   services:
     - docker:dind
   script:
