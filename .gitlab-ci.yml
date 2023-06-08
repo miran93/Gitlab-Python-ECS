@@ -2,15 +2,18 @@ stages:
   - build
   - deploy
 
+variables:
+  DOCKER_IMAGE_NAME: miranmuthanna93/python-image
+
 build:
   stage: build
   image: docker:latest
   services:
     - docker:dind
   script:
-    - docker build -t python-image .
+    - docker build -t $DOCKER_IMAGE_NAME .
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push python-image
+    - docker push $DOCKER_IMAGE_NAME
 
 
 deploy:
