@@ -20,8 +20,9 @@ build:
 
 artifact:
   stage: artifact
-  image: python:3.8
+  image: ubuntu:latest
   script:
+    - apt-get update -y && apt-get install -y zip
     - zip -r app.zip . -x '*.git*'
   artifacts:
     paths:
