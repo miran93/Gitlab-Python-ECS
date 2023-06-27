@@ -1,31 +1,39 @@
 stages:
   - build
+  - artifact
   - deploy
 
-docker-build:
+variables:
+  IMAGE_NAME: my-app
+  TASK_DEFINITION_NAME: python-ecs
+  SERVICE_NAME: python-ecs-service
+  CLUSTER_NAME: python-ecs
+  AWS_REGION: us-east-1
+
+build:
   stage: build
-
-  image:
-    name: docker:18.09
-  services:
-   - docker:18.09-dind
-
-  variables:
-    DOCKER_HOST: tcp://docker:2375/
-    DOCKER_DRIVER: overlay2
-    DOCKER_TLS_CERTDIR: ""
-
+  image: python:3.8
   script:
-    - docker build -t my-docker-image .
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - docker push my-docker-image
+    - apt-get update -y && apt-get install -y zip
+    - pip install -r requirements.txt
+    - python setup.py install
+
+artifact:
+  stage: artifact
+  image: python:3.8
+  script:
+    - zip -r app.zip . -x '*.git*'
+  artifacts:
+    paths:
+      - app.zip
 
 deploy:
   stage: deploy
-  image: python:latest
+  image: python:3.8
+  before_script:
+    - apt-get update -y && apt-get install -y awscli
   script:
-    - pip install awscli
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - aws configure set default.region $AWS_REGION
-    - aws ecs update-service --cluster $ECS_CLUSTER_NAME --service $ECS_SERVICE_NAME --force-new-deployment
+    - aws ecs update-service --cluster $CLUSTER_NAME --service $SERVICE_NAME --force-new-deployment
